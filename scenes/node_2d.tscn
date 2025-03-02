@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://15f180f64k7o"]
+
+[ext_resource type="Script" path="res://scripts/drawing.gd" id="1_ksxuv"]
+
+[node name="Node2D" type="Node2D"]
+rotation = -0.101361
+script = ExtResource("1_ksxuv")

@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://itud3ba7lx1a"]
+
+[ext_resource type="Texture2D" uid="uid://cq7lnqlpwyd6a" path="res://assets/Textures/main_menu_background.png" id="1_8e3gi"]
+[ext_resource type="Texture2D" uid="uid://b3xmu5doa8wxj" path="res://assets/Textures/unpressed_button Background Removed.png" id="2_wuclt"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_8e3gi")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -126.0
+offset_top = -248.0
+offset_right = 389.0
+offset_bottom = 252.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.5, 0.5)
+icon = ExtResource("2_wuclt")
+icon_alignment = 1
+vertical_icon_alignment = 2
+
+[node name="Label" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0

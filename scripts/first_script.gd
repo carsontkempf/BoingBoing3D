@@ -1,11 +1,12 @@
-extends AnimatedSprite2D
+extends CharacterBody2D
 
+var speed = 150
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func _physics_process(_delta):
+	var input_dir = Vector2(
+		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
+		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
+	)
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+	velocity = input_dir.normalized() * speed  # Assign velocity
+	move_and_slide()  # Now works correctly
