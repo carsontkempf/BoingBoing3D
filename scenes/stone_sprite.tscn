@@ -15,7 +15,6 @@ region_rect = Rect2(800, 632, 40, 40)
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_ie768")]
 disable_mode = 1
-collision_mask = 2
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("RectangleShape2D_20l4o")

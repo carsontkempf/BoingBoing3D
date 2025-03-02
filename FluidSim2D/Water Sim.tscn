@@ -11,9 +11,4 @@ script = ExtResource("2")
 particle_texture = ExtResource("6")
 max_water_particles = 800
 
-[node name="Camera2D" type="Camera2D" parent="."]
-light_mask = 2
-position = Vector2(535, 234)
-zoom = Vector2(2, 2)
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

@@ -3,7 +3,7 @@ extends Node2D
 @export var particle_texture: Texture2D;
 @export var max_water_particles = 100
 var current_particle_count = 0
-var spawn_timer = 0
+var spawn_timer = 2.0
 @export var spawn_time = 1.0
 var water_particles = []
 
@@ -28,7 +28,7 @@ func create_particle():
 	#set physics parameters
 	ps.body_set_param(water_col,PhysicsServer2D.BODY_PARAM_FRICTION,0.0)
 	ps.body_set_param(water_col,PhysicsServer2D.BODY_PARAM_MASS,0.05)
-	ps.body_set_param(water_col,PhysicsServer2D.BODY_PARAM_GRAVITY_SCALE,2.0)
+	ps.body_set_param(water_col,PhysicsServer2D.BODY_PARAM_GRAVITY_SCALE,0.8)
 	ps.body_set_state(water_col,PhysicsServer2D.BODY_STATE_TRANSFORM,trans)
 	#Visual
 	#create canvas item(all 2D objects are canvas items)
@@ -40,7 +40,7 @@ func create_particle():
 	#create a rectangle that will contain the texture
 	var rect = Rect2()
 	rect.position = Vector2(-8,-8)
-	rect.size = particle_texture.get_size()/2
+	rect.size = particle_texture.get_size()/4
 	#add the texture to the canvas item
 	vs.canvas_item_add_texture_rect(water_particle,rect,particle_texture)
 	#set the texture color to pink
@@ -48,7 +48,7 @@ func create_particle():
 	#add RID pair to array
 	water_particles.append([water_col,water_particle])
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	#add particles while less than max amount set and timer < 0
 	if spawn_timer < 0 and current_particle_count < max_water_particles:
 		create_particle()
@@ -62,7 +62,7 @@ func _physics_process(delta):
 		trans.origin = trans.origin - global_position
 		RenderingServer.canvas_item_set_transform(col[1],trans)
 		#Delete particles if Y position > than 1500. 2D y down is positive
-		if trans.origin.y > 1500:
+		if trans.origin.y > 1600:
 			#remove RIDs
 			PhysicsServer2D.free_rid(col[0])
 			RenderingServer.free_rid(col[1])

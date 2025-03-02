@@ -17,7 +17,6 @@ region_rect = Rect2(128, 176, 32, 32)
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_jjevo")]
 visible = false
 disable_mode = 0
-collision_mask = 2
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="CharacterBody2D"]
 visible = false
