@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://lpbu1f3uqvi8" path="res://scenes/stone_sprite.tscn" id="4_5vm7i"]
 [ext_resource type="PackedScene" uid="uid://cl2ooi6yrv6oe" path="res://scenes/dirt_sprite.tscn" id="5_6q17n"]
 [ext_resource type="Script" path="res://FluidSim2D/water_sim.gd" id="7_y4044"]
+
 [ext_resource type="PackedScene" uid="uid://6pawyppanyik" path="res://FluidSim2D/Water Sim.tscn" id="10_54f2h"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_p53ix"]
@@ -589,8 +590,10 @@ texture = ExtResource("3_4uev5")
 sources/1 = SubResource("TileSetAtlasSource_1e3bt")
 sources/5 = SubResource("TileSetAtlasSource_6s7dc")
 
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7tpof"]
 size = Vector2(571, 111.5)
+
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_jumnk")
@@ -637,6 +640,7 @@ zoom = Vector2(0.8, 0.75)
 [node name="Dirts" parent="." instance=ExtResource("5_6q17n")]
 
 [node name="GoalArea" type="Area2D" parent="."]
+
 position = Vector2(-136, -244)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GoalArea"]
@@ -655,3 +659,4 @@ script = ExtResource("7_y4044")
 [connection signal="body_shape_entered" from="GoalArea" to="GoalArea/Water Sim" method="_on_goal_area_body_shape_entered"]
 [connection signal="body_shape_exited" from="GoalArea" to="GoalArea/Water Sim" method="_on_goal_area_body_shape_exited"]
 [connection signal="child_entered_tree" from="GoalArea" to="GoalArea/Water Sim" method="_on_goal_area_child_entered_tree"]
+
