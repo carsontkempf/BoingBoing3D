@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://lpbu1f3uqvi8"]
+
+[ext_resource type="Texture2D" uid="uid://bejnmjv4qtd23" path="res://assets/Pixel Art Platformer - Village Props v2/Texture/TX Village Props.png" id="1_ch75h"]
+[ext_resource type="PackedScene" uid="uid://c7cyknmqigi4n" path="res://scenes/stones.tscn" id="2_ie768"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_20l4o"]
+size = Vector2(40, 40)
+
+[node name="Stones" type="Sprite2D"]
+z_index = 5
+position = Vector2(-71, 181)
+texture = ExtResource("1_ch75h")
+region_enabled = true
+region_rect = Rect2(800, 632, 40, 40)
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("2_ie768")]
+disable_mode = 1
+collision_mask = 2
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("RectangleShape2D_20l4o")

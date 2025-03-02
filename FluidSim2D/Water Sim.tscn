@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://6pawyppanyik"]
+
+[ext_resource type="Script" path="res://FluidSim2D/WaterGenPhysicsServer.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://dmbqtv0imbx62" path="res://FluidSim2D/water_particle.png" id="6"]
+
+[node name="Water Sim" type="Node2D"]
+
+[node name="WaterGen" type="Marker2D" parent="."]
+position = Vector2(587, -688)
+script = ExtResource("2")
+particle_texture = ExtResource("6")
+max_water_particles = 800
+
+[node name="Camera2D" type="Camera2D" parent="."]
+light_mask = 2
+position = Vector2(535, 234)
+zoom = Vector2(2, 2)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
