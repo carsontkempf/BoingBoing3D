@@ -1,55 +1,38 @@
 extends Node2D
 
-# --- Deletion (Drawing) Code ---
-var _is_drawing: bool = false  # Track if the mouse is held
+# --- Node References ---
+@onready var goal_area: Area2D = $GoalArea  # Adjust this path if GoalArea is nested differently
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			_is_drawing = true
-		else:
-			_is_drawing = false
+# --- Win Condition Variables ---
+@export var water_needed_to_win: int = 3
+var current_water_count: int = 0
 
-func _process(_delta: float) -> void:
-	if _is_drawing:
-		check_and_delete_dirt(get_global_mouse_position())
-
-func check_and_delete_dirt(mouse_pos: Vector2) -> void:
-	var draw_radius = 20.0  # Adjust as needed
-	for tile in get_tree().get_nodes_in_group("dirt_tiles"):
-		if tile.position.distance_to(mouse_pos) <= draw_radius:
-			tile.queue_free()
-
-# --- Background Generation Code ---
-var tile_size = Vector2(32, 32)           # Set your tile dimensions (16 or 32 as needed)
-var grid_offset = Vector2(21, 745)           # Offset from left and bottom of screen
-var grid_area = Vector2(1000, 1000)         # Area to cover with the grid
-var metal_chance = 0.1                    # 8% chance for a metal tile in any cell
+# --- Background Generation Variables ---
+var tile_size: Vector2 = Vector2(32, 32)
+var grid_offset: Vector2 = Vector2(21, 745)
+var grid_area: Vector2 = Vector2(1000, 1000)
+var metal_chance: float = 0.1
 
 var dirt_scene = preload("res://scenes/dirt_sprite.tscn")
 var metal_scene = preload("res://scenes/stone_sprite.tscn")
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
+# --- Background Generation Function ---
 func generate_background() -> void:
-	var viewport_size = get_viewport_rect().size
-	# Calculate the bottom left anchor.
-	# Since Godot's origin is top-left, the bottom left is:
-	var bottom_left = Vector2(grid_offset.x, viewport_size.y - grid_offset.y)
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var bottom_left: Vector2 = Vector2(grid_offset.x, viewport_size.y - grid_offset.y)
 	print("Viewport size: ", viewport_size)
 	print("Calculated bottom_left: ", bottom_left)
 	
-	# Calculate number of columns and rows needed to cover grid_area
-	var cols = ceil(grid_area.x / tile_size.x)
-	var rows = ceil(grid_area.y / tile_size.y)
+	var cols: float = ceil(grid_area.x / tile_size.x)
+	var rows: float = ceil(grid_area.y / tile_size.y)
 	print("Columns: ", cols, " Rows: ", rows)
 	
-	# Loop over each cell in the grid
 	for i in range(int(cols)):
 		for j in range(int(rows)):
-			var tile_x = bottom_left.x + i * tile_size.x
-			var tile_y = bottom_left.y - j * tile_size.y  # subtract to move upward
+			var tile_x: float = bottom_left.x + i * tile_size.x
+			var tile_y: float = bottom_left.y - j * tile_size.y
 			var tile
-			# Randomly choose between a metal tile or a dirt tile.
 			if rng.randf() < metal_chance:
 				tile = metal_scene.instantiate()
 			else:
@@ -57,9 +40,45 @@ func generate_background() -> void:
 				tile.add_to_group("dirt_tiles")
 			tile.position = Vector2(tile_x, tile_y)
 			add_child(tile)
-			#print("Tile placed at: ", tile.position)  # Uncomment for debugging
 
+# --- _ready() ---
 func _ready() -> void:
-	# Seed the RNG. Use rng.randomize() if you want a different seed each run.
-	rng.seed = 123456789
+	rng.seed = 123456789  # or use rng.randomize() for a different seed
 	generate_background()
+	
+	# Connect the GoalArea's "body_entered" signal
+	if goal_area:
+		goal_area.connect("body_entered", Callable(self, "_on_goal_area_body_entered"))
+		print("DEBUG: GoalArea signal connected.")
+	else:
+		print("DEBUG: GoalArea not found! Check your scene tree and node path.")
+
+# --- Per-Frame Check (Optional) ---
+func _physics_process(_delta: float) -> void:
+	check_goal_condition()
+
+# --- Signal Callback for GoalArea ---
+func _on_goal_area_body_entered(body: Node) -> void:
+	# Only count bodies that are in the "water" group.
+	if body.is_in_group("water"):
+		current_water_count += 1
+		print("DEBUG: Water droplet entered goal. Current count:", current_water_count)
+		body.queue_free()  # Remove the droplet so it isn't counted twice.
+		if current_water_count >= water_needed_to_win:
+			game_win()
+
+# --- Optional Per-Frame Overlap Check ---
+func check_goal_condition() -> void:
+	if goal_area:
+		var droplets = goal_area.get_overlapping_bodies()
+		var count = 0
+		for body in droplets:
+			if body.is_in_group("water"):
+				count += 1
+		if count > 0:
+			print("DEBUG: Overlapping water droplets count:", count)
+
+# --- Win Function ---
+func game_win() -> void:
+	print("You Win!")
+	# Insert further win logic here (e.g., display win UI, change scene, etc.)
