@@ -1,17 +1,33 @@
 extends Node2D
 
-# --- Node References ---
-@onready var goal_area: Area2D = $GoalArea  # Adjust this path if GoalArea is nested differently
+@export var water_needed_to_win = 30
+
+# --- Deletion (Drawing) Code ---
+var _is_drawing: bool = false  # Track if the mouse is held
+
 
 # --- Win Condition Variables ---
 @export var water_needed_to_win: int = 3
 var current_water_count: int = 0
 
-# --- Background Generation Variables ---
-var tile_size: Vector2 = Vector2(32, 32)
-var grid_offset: Vector2 = Vector2(21, 745)
-var grid_area: Vector2 = Vector2(1000, 1000)
-var metal_chance: float = 0.1
+
+func _process(_delta: float) -> void:
+	check_goal_condition()
+	if _is_drawing:
+		check_and_delete_dirt(get_global_mouse_position())
+
+func check_and_delete_dirt(mouse_pos: Vector2) -> void:
+	var draw_radius = 20.0  # Adjust as needed
+	for tile in get_tree().get_nodes_in_group("dirt_tiles"):
+		if tile.position.distance_to(mouse_pos) <= draw_radius:
+			tile.queue_free()
+
+# --- Background Generation Code ---
+var tile_size = Vector2(32, 32)           # Set your tile dimensions (16 or 32 as needed)
+var grid_offset = Vector2(21, 745)           # Offset from left and bottom of screen
+var grid_area = Vector2(1000, 1000)         # Area to cover with the grid
+var metal_chance = 0.1                    # 8% chance for a metal tile in any cell
+
 
 var dirt_scene = preload("res://scenes/dirt_sprite.tscn")
 var metal_scene = preload("res://scenes/stone_sprite.tscn")
@@ -46,39 +62,10 @@ func _ready() -> void:
 	rng.seed = 123456789  # or use rng.randomize() for a different seed
 	generate_background()
 	
-	# Connect the GoalArea's "body_entered" signal
-	if goal_area:
-		goal_area.connect("body_entered", Callable(self, "_on_goal_area_body_entered"))
-		print("DEBUG: GoalArea signal connected.")
-	else:
-		print("DEBUG: GoalArea not found! Check your scene tree and node path.")
+func check_goal_condition():
+	if Globals.particles_in_goal >= water_needed_to_win:
+		game_win()
 
-# --- Per-Frame Check (Optional) ---
-func _physics_process(_delta: float) -> void:
-	check_goal_condition()
+func game_win():
+	print("You Win!!")
 
-# --- Signal Callback for GoalArea ---
-func _on_goal_area_body_entered(body: Node) -> void:
-	# Only count bodies that are in the "water" group.
-	if body.is_in_group("water"):
-		current_water_count += 1
-		print("DEBUG: Water droplet entered goal. Current count:", current_water_count)
-		body.queue_free()  # Remove the droplet so it isn't counted twice.
-		if current_water_count >= water_needed_to_win:
-			game_win()
-
-# --- Optional Per-Frame Overlap Check ---
-func check_goal_condition() -> void:
-	if goal_area:
-		var droplets = goal_area.get_overlapping_bodies()
-		var count = 0
-		for body in droplets:
-			if body.is_in_group("water"):
-				count += 1
-		if count > 0:
-			print("DEBUG: Overlapping water droplets count:", count)
-
-# --- Win Function ---
-func game_win() -> void:
-	print("You Win!")
-	# Insert further win logic here (e.g., display win UI, change scene, etc.)

@@ -56,20 +56,18 @@ func _physics_process(delta: float) -> void:
 		create_particle()
 		current_particle_count += 1
 		spawn_timer = spawn_time
-	spawn_timer -= delta
-	
-	# Update each droplet's visual based on its physics body state and remove if too low
-	for droplet in water_particles.duplicate():
-		var ps = PhysicsServer2D
-		var water_body = droplet.get_meta("physics_body")
-		var trans = ps.body_get_state(water_body, PhysicsServer2D.BODY_STATE_TRANSFORM)
-		var vs = RenderingServer
-		var canvas_item = droplet.get_meta("canvas_item")
-		vs.canvas_item_set_transform(canvas_item, trans)
-		# Remove droplet if its y position exceeds 2000 (adjust threshold as needed)
+	spawn_timer -= 1
+	#update particle texture position to be at Rigid body position
+	for col in water_particles:
+		var trans = PhysicsServer2D.body_get_state(col[0],PhysicsServer2D.BODY_STATE_TRANSFORM)
+		trans.origin = trans.origin - global_position
+		RenderingServer.canvas_item_set_transform(col[1],trans)
+		#Delete particles if Y position > than 1500. 2D y down is positive
 		if trans.origin.y > 2000:
-			ps.free_rid(water_body)
-			vs.free_rid(canvas_item)
-			droplet.queue_free()
-			water_particles.erase(droplet)
-			current_particle_count -= 1
+			#remove RIDs
+			PhysicsServer2D.free_rid(col[0])
+			RenderingServer.free_rid(col[1])
+			#remove reference
+			water_particles.erase(col)
+			Globals.total_water_particles -=1
+
