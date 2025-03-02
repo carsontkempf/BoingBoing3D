@@ -1,5 +1,7 @@
 extends Node2D
 
+@export var water_needed_to_win = 30
+
 # --- Deletion (Drawing) Code ---
 var _is_drawing: bool = false  # Track if the mouse is held
 
@@ -11,6 +13,7 @@ func _input(event: InputEvent) -> void:
 			_is_drawing = false
 
 func _process(_delta: float) -> void:
+	check_goal_condition()
 	if _is_drawing:
 		check_and_delete_dirt(get_global_mouse_position())
 
@@ -63,3 +66,10 @@ func _ready() -> void:
 	# Seed the RNG. Use rng.randomize() if you want a different seed each run.
 	rng.seed = 123456789
 	generate_background()
+	
+func check_goal_condition():
+	if Globals.particles_in_goal >= water_needed_to_win:
+		game_win()
+
+func game_win():
+	print("You Win!!")

@@ -62,7 +62,7 @@ func _physics_process(_delta):
 		trans.origin = trans.origin - global_position
 		RenderingServer.canvas_item_set_transform(col[1],trans)
 		#Delete particles if Y position > than 1500. 2D y down is positive
-		if trans.origin.y > 1600:
+		if trans.origin.y > 2000:
 			#remove RIDs
 			PhysicsServer2D.free_rid(col[0])
 			RenderingServer.free_rid(col[1])
