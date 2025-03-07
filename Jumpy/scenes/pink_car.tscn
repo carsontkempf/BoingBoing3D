@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://csjclmmmtswsc"]
+
+[ext_resource type="Script" path="res://scripts/car.gd" id="1_5wk28"]
+[ext_resource type="Texture2D" uid="uid://eteloltugc41" path="res://assets/PinkCarSprite.png" id="1_e5b2c"]
+
+[sub_resource type="Gradient" id="Gradient_snrqk"]
+colors = PackedColorArray(0, 0, 0, 1, 0.317647, 0.317647, 0.317647, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fojt8"]
+gradient = SubResource("Gradient_snrqk")
+width = 42
+height = 34
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.7, 0.5)
+metadata/_snap_enabled = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_in4rs"]
+size = Vector2(12, 6)
+
+[node name="PinkCar" type="Sprite2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+script = ExtResource("1_5wk28")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+z_index = 1
+position = Vector2(0, -2)
+scale = Vector2(0.975, 0.975)
+texture = ExtResource("1_e5b2c")
+
+[node name="shadow" type="Sprite2D" parent="CharacterBody2D"]
+position = Vector2(0, -1)
+scale = Vector2(1.35122, 0.775815)
+texture = SubResource("GradientTexture2D_fojt8")
+
+[node name="Area2D" type="Area2D" parent="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/Area2D"]
+position = Vector2(0, -2)
+scale = Vector2(1.1, 1.1)
+shape = SubResource("RectangleShape2D_in4rs")
+
+[connection signal="body_entered" from="CharacterBody2D/Area2D" to="CharacterBody2D" method="_on_area_2d_body_entered"]

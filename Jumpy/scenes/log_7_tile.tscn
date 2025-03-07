@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://dfg7wy2q08ndx"]
+
+[ext_resource type="Script" path="res://scripts/log.gd" id="1_me3gp"]
+[ext_resource type="Texture2D" uid="uid://ckl6pj4i5gsiq" path="res://assets/Log7Tile.png" id="2_sykpx"]
+
+[sub_resource type="Gradient" id="Gradient_2630d"]
+offsets = PackedFloat32Array(0, 0.318182, 0.694805, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.0433155, 0.0433155, 0.0433155, 0.863636, 0.0763178, 0.0763178, 0.0763178, 0.75974, 0.317647, 0.317647, 0.317647, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_n3h83"]
+gradient = SubResource("Gradient_2630d")
+width = 110
+height = 10
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.2, 0.5)
+metadata/_snap_enabled = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rdiy4"]
+size = Vector2(52, 2)
+
+[node name="Log7Tile" type="Sprite2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+script = ExtResource("1_me3gp")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+z_index = 1
+position = Vector2(4, -2)
+scale = Vector2(0.96, 0.775)
+texture = ExtResource("2_sykpx")
+
+[node name="shadow" type="Sprite2D" parent="CharacterBody2D"]
+position = Vector2(4, 0)
+texture = SubResource("GradientTexture2D_n3h83")
+
+[node name="Area2D" type="Area2D" parent="CharacterBody2D"]
+position = Vector2(0, -2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/Area2D"]
+position = Vector2(4, 0)
+shape = SubResource("RectangleShape2D_rdiy4")
+
+[connection signal="body_entered" from="CharacterBody2D/Area2D" to="CharacterBody2D" method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="CharacterBody2D/Area2D" to="CharacterBody2D" method="_on_area_2d_body_exited"]
